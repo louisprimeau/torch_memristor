@@ -1,0 +1,12 @@
+function resistance = cycle(signal, time, p)
+
+	 update = @(w, v, dt, p) w + dw(w, v, p)*dt;
+	 r = @(w, p) p(11) + (p(10) - p(11)) / (p(1) - p(2)) * (w - p(2));
+	 w = p(3);
+	 resistance = nan(length(signal), 1);
+	 for j = (1:(length(signal)-1))
+	     resistance(j) = r(w, p);
+	     w = update(w, signal(j), time(j+1) - time(j), p);
+	 end
+	 resistance = resistance(1:2:end, 1);
+end

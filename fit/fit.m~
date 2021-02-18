@@ -1,0 +1,33 @@
+
+
+w_off = 10e-9;
+w_on = 0e-9;
+w_init = 10e-9;
+k_off = 4.03e-8;
+k_on = -80;
+a_off = 1;
+a_on = 3;
+v_off = 0.5;
+v_on = -0.53;
+r_off = 11e3;
+r_on = 1e3;
+
+%    1     2    3      4     5    6     7    8     9    10    11
+p = [w_off w_on w_init k_off k_on a_off a_on v_off v_on r_off r_on];
+
+data = csvread('data.csv');
+y_true = data(2:end, 2);
+
+error = @(x,y) sqrt(mean((x-y).^2));
+
+sq_wave = @(on, off, n) [ones(1, n)*on, ones(1, n)*off];
+N = 400;
+n = 1;
+signal = repmat(sq_wave(1.4, 0, n), 1, N);
+time = linspace(0, N*200e-9, (2*N)*n);
+
+resistance = cycle(signal, time, p);
+error(resistance(1:2:end), y_true) 
+%plot(data(2:end,1), resistance(1, 1:2:end));
+%hold on;
+%plot(data(:,1), data(:,2))
